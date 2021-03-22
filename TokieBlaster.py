@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import time
 from grove.gpio import GPIO
+from grove.factory import Factory
 
 __all__ = ["GroveRelay"]
 
@@ -29,7 +30,11 @@ class GroveRelay(GPIO):
 
 
 Grove = GroveRelay
-
+def InitializeDisplay():
+    # LCD 16x2 Characters
+    lcd = Factory.getDisplay("JHD1802")
+    lcd.setCursor(0, 0)
+    lcd.write("hello world!")
 
 def main():
     from grove.helper import SlotHelper
@@ -48,6 +53,7 @@ def main():
             exit(1)            
 
 if __name__ == '__main__':
+    InitializeDisplay()
     main()
 
 
