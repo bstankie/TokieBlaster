@@ -1,31 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# The MIT License (MIT)
-#
-# Grove Base Hat for the Raspberry Pi, used to connect grove sensors.
-# Copyright (C) 2018  Seeed Technology Co.,Ltd.
-'''
-This is the code for
-    - `Grove - Relay <https://www.seeedstudio.com/s/Grove-Relay-p-769.html>`_
-
-Examples:
-
-    .. code-block:: python
-
-        import time
-        from grove.grove_relay import GroveRelay
-
-        # connect to pin 5(slot D5)
-        PIN   = 5
-        relay = GroveRelay(PIN)
-
-        while True:
-            relay.on()
-            time.sleep(1)
-            relay.off()
-            time.sleep(1)
-'''
 import time
 from grove.gpio import GPIO
 
@@ -59,8 +33,6 @@ Grove = GroveRelay
 
 def main():
     from grove.helper import SlotHelper
-    sh = SlotHelper(SlotHelper.GPIO)
-    pin = sh.argv2pin()
     pin = 12
     relay = GroveRelay(pin)
 
