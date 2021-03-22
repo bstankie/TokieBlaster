@@ -30,11 +30,25 @@ class GroveRelay(GPIO):
 
 
 Grove = GroveRelay
-def InitializeDisplay():
+def InitializeDisplay(lcd,totalTime):
     # LCD 16x2 Characters
-    lcd = Factory.getDisplay("JHD1802")
     lcd.setCursor(0, 0)
-    lcd.write("hello world!")
+    lcd.write("Tokie Blaster")
+    lcd.setCursor(1, -5)
+    lcd.write("Ready")
+    mins, secs = divmod(totalTime, 60)
+    lcd.setCursor(1, 0)
+
+    lcd.write('T:{:02d}:{:02d}'.format(mins, secs)) 
+
+def Countdown(totalTime,lcd):
+    currTime = totalTime
+    while currTime: 
+        mins, secs = divmod(currTime, 60) 
+        timer = '{:02d}:{:02d}'.format(mins, secs) 
+        print(timer, end="\r") 
+        time.sleep(1) 
+        currTime -= 1
 
 def main():
     from grove.helper import SlotHelper
@@ -53,7 +67,9 @@ def main():
             exit(1)            
 
 if __name__ == '__main__':
-    InitializeDisplay()
+    lcd = Factory.getDisplay("JHD1802")
+
+    InitializeDisplay(lcd,30)
     main()
 
 
