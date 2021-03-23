@@ -43,12 +43,9 @@ def on_event(index, event, tm):
     if event & Button.EV_SINGLE_CLICK:
         print('single click')
         button.led.light(True)
-        return True
     elif event & Button.EV_LONG_PRESS:
-        print('long press')        if State == 'Running':
-
+        print('long press') 
         button.led.light(False)
-        return False
 button.on_event = on_event
 
 
