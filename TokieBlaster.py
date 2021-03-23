@@ -43,33 +43,34 @@ def InitializeDisplay(lcd,totalTime):
 
 def Countdown(totalTime,lcd):
     currTime = totalTime
-    while currTime: 
-        mins, secs = divmod(currTime, 60) 
-        timer = '{:02d}:{:02d}'.format(mins, secs) 
-        print(timer, end="\r") 
-        time.sleep(1) 
-        currTime -= 1
-
-def main():
-    from grove.helper import SlotHelper
     pin = 12
     relay = GroveRelay(pin)
-
+    relay.on()
+    while currTime: 
+        mins, secs = divmod(currTime, 60) 
+        timer = '{:02d}:{:02d}'.format(mins, secs)
+        lcd.setCursor(1, -5)
+        lcd.write(timer) 
+        time.sleep(1) 
+        currTime -= 1
+    relay.off()
+'''
+def main():
+    from grove.helper import SlotHelper
     while True:
         try:
-            relay.on()
             time.sleep(1)
             relay.off()
             time.sleep(1)
         except KeyboardInterrupt:
-            relay.off()
             print("exit")
             exit(1)            
-
+'''
 if __name__ == '__main__':
     lcd = Factory.getDisplay("JHD1802")
-
-    InitializeDisplay(lcd,30)
-    main()
+    totalTime = 30
+    InitializeDisplay(lcd,totalTime)
+    Countdown(totalTime,lcd)
+    #main()
 
 
