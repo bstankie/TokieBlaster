@@ -67,7 +67,7 @@ def InitializeDisplay(lcd,totalTime):
     lcd.write("Ready   ")
     mins, secs = divmod(totalTime, 60)
     lcd.setCursor(1, -5)
-    lcd.write('T:{:02d}:{:02d}'.format(mins, secs))
+    lcd.write('{:02d}:{:02d}'.format(mins, secs))
     
 def Countdown(lcd,relay,totalTime):
     currTime = totalTime
@@ -100,7 +100,14 @@ if __name__ == '__main__':
     InitializeDisplay(lcd,totalTime)
     waiting = True
     while waiting:
-        time.sleep(0.5)
+        try:
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            lcd.setCursor(1, 0)
+            relay.off()
+            lcd.write("ABORTED!")
+            exit(1)
+
     #ledButton = GroveLedButton(5)
 
     lcd.setCursor(1,0)
