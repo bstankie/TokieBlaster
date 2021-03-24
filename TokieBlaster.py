@@ -62,6 +62,8 @@ def InitializeDisplay(lcd,totalTime):
 def Countdown(lcd,relay,totalTime):
     currTime = totalTime
     relay.on()
+    lcd.setCursor(1,0)
+    lcd.write('Running')
     while currTime:
         try:
             mins, secs = divmod(currTime, 60) 
@@ -87,10 +89,10 @@ if __name__ == '__main__':
     relayState=0
     #ledButton = GroveLedButton(5)
 
-    while True:
-        InitializeDisplay(lcd,totalTime)
-        if State == 'Running':
-            Countdown(lcd,relay,totalTime)
+    InitializeDisplay(lcd,totalTime)
+    Countdown(lcd,relay,totalTime)
+    lcd.setCursor(1,0)
+    lcd.write('Done   ')
     #main()
 
 
