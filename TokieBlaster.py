@@ -8,14 +8,53 @@ from grove.grove_ryb_led_button import GroveLedButton
 
 
 __all__ = ["GroveRelay"]
+__all__ = ["GroveRotaryAngleSensor"]
 
 #------
 # Global Variables
 #------
 button = GroveLedButton(5)
+#----
 lcd = Factory.getDisplay("JHD1802")
+#----
 relayPin = 12
+#----
+rotaryPin = 2
+#----
 totalTime = 5
+#----
+statusRunning = False
+
+
+import math
+import time
+from grove.adc import ADC
+
+
+class GroveRotaryAngleSensor(ADC):
+    '''
+    Grove Rotary Angle Sensor class
+
+    Args:
+        pin(int): number of analog pin/channel the sensor connected.
+    '''
+    def __init__(self, channel):
+        self.channel = channel
+        self.adc = ADC()
+    
+    @property
+    def value(self):
+        '''
+        Get the rotary angle value, max angle is 100.0%
+
+        Returns:
+            (int): ratio, 0(0.0%) - 1000(100.0%)
+        '''
+        return self.adc.read(self.channel)
+
+
+Grove = GroveRotaryAngleSensor
+sensor = GroveRotaryAngleSensor(rotaryPin)
 
 class GroveRelay(GPIO):
     '''
@@ -49,12 +88,13 @@ def on_event(index, event, tm):
     #print("pressed:{}".format(event['presesed']))
     if event & Button.EV_SINGLE_CLICK:
         button.led.blink(True)
-        Countdown(lcd,relay,totalTime)
+        Countdown(lcd,relay,int(totalTime))
         button.led.blink(False)
-        InitializeDisplay(lcd,totalTime)
+        InitializeDisplay(lcd,int(totalTime))
     elif event & Button.EV_LONG_PRESS:
         print('long press') 
         button.led.light(False)
+        running = False
 
 button.on_event = on_event
     
@@ -97,17 +137,29 @@ if __name__ == '__main__':
     #relay = GroveRelay(relayPin)
     #totalTime = 5
     #relayState=0
-    InitializeDisplay(lcd,totalTime)
-    waiting = True
-    while waiting:
-        try:
-            time.sleep(0.5)
-        except KeyboardInterrupt:
-            lcd.setCursor(1, 0)
-            relay.off()
-            lcd.write("ABORTED!")
-            exit(1)
-
+    totalTime = 5.0*(round(float(sensor.value)/1000.0*12.0))
+    InitializeDisplay(lcd,int(totalTime))
+    while True:
+        if not statusRunning:
+            try:
+                time.sleep(0.1)
+                totalTime = 5.0*(round(float(sensor.value)/1000.0*12.0))
+                InitializeDisplay(lcd,int(totalTime))
+                print('TotalTime: %5.4f' % totalTime)
+            except KeyboardInterrupt:
+                lcd.setCursor(1, 0)
+                relay.off()
+                lcd.write("ABORTED!")
+                exit(1)
+        else:
+            try:
+                print('Running')
+                time.sleep(0.1)
+            except KeyboardInterrupt:
+                lcd.setCursor(1, 0)
+                relay.off()
+                lcd.write("ABORTED!")
+                exit(1)
     #ledButton = GroveLedButton(5)
 
     lcd.setCursor(1,0)
