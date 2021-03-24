@@ -62,7 +62,7 @@ button.on_event = on_event
 def InitializeDisplay(lcd,totalTime):
     # LCD 16x2 Characters
     lcd.setCursor(0, 0)
-    lcd.write("Tokie Blaster")
+    lcd.write("Tokie Blaster M2")
     lcd.setCursor(1, 0)
     lcd.write("Ready   ")
     mins, secs = divmod(totalTime, 60)
